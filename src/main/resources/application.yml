@@ -1,0 +1,29 @@
+kafka:
+  bootstrap-servers: ${BOOTSTAP_SERVERS}
+  incoming-topic-name: ${INCOMING_TOPIC_NAME}
+  outgoing-topic-name: ${OUTGOING_TOPIC_NAME}
+  consumer:
+    max-poll-records: ${KAFKA_MAX_POLL_RECORDS}
+    auto-offset-reset: ${KAFKA_OFFSET_RESET}
+    group-id: ${KAFKA_GROUP_ID}
+    concurrency: ${KAFKA_CONSUMER_CONCURRENCY}
+
+server:
+  port: ${SERVER_PORT}
+
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    tags:
+      application: demo-service

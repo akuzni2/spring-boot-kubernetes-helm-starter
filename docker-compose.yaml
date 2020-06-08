@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  demo-service:
+    build:
+      context: .
+    image: demo-service
+    container_name: demo-service-container
+    network_mode: "host"
+    ports:
+      - 8080:8080
+    restart: always
+    env_file:
+      - demo-service.env

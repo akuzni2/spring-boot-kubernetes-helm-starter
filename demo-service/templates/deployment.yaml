@@ -1,0 +1,106 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "demo-service.fullname" . }}
+  labels:
+    {{- include "demo-service.labels" . | nindent 4 }}
+spec:
+{{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "demo-service.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "demo-service.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "demo-service.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: BOOTSTAP_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: demo-service-configmap
+                  key: bootstrap_servers
+            - name: INCOMING_TOPIC_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: demo-service-configmap
+                  key: incoming_topic_name
+            - name: OUTGOING_TOPIC_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: demo-service-configmap
+                  key: outgoing_topic_name
+            - name: KAFKA_MAX_POLL_RECORDS
+              valueFrom:
+                configMapKeyRef:
+                  name: demo-service-configmap
+                  key: kafka_max_poll_records
+            - name: KAFKA_OFFSET_RESET
+              valueFrom:
+                configMapKeyRef:
+                  name: demo-service-configmap
+                  key: kafka_offset_reset
+            - name: KAFKA_GROUP_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: demo-service-configmap
+                  key: kafka_group_id
+            - name: KAFKA_CONSUMER_CONCURRENCY
+              valueFrom:
+                configMapKeyRef:
+                  name: demo-service-configmap
+                  key: kafka_consumer_concurrency
+            - name: SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: demo-service-configmap
+                  key: server_port
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.containerPort }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
