@@ -112,3 +112,4 @@ minkube stop
 6) Add some fun Emojis to this README :) 
 7) Figure out running the docker/zookeepr and how we can connect them to this deployment?
 8) Update the dev-tools kafka/zookeeper to latest version
+9) Add circleci build process
