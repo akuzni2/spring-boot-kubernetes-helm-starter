@@ -17,16 +17,12 @@ public class Application implements CommandLineRunner {
         SpringApplication.run(Application.class, args);
     }
 
-    @Value("${kafka.incoming-topic-name}")
-    private String INCOMING_TOPIC;
-
     @Autowired
     private Consumer consumer;
 
     @Autowired
     private Producer producer;
-
-
+    
     @Override
     public void run(String... args) {
 
