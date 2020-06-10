@@ -13,9 +13,21 @@ The project configuration is setup to deploy this service to a Kubernetes enviro
 #### 1) Build the jar file (Either locally or from CICD pipeline)
 
 #### 2) Start minikube
-
-```$xslt
+Ideally minikube should be already setup. Follow the guides linked in the **Requirements** section
+##### Mac-OSX
+Choose one of the available hypervisors
+```shell
+minikube start --driver=hyperkit
+```
+This only needs to be ran the first time. 
+only needs to be ran the first time
+```shell
 minikube start
+```
+Above command can be ran after you've set the driver the first time running
+##### On Windows
+```
+minikube start --vm-driver hyperv
 ```
 
 #### 3) Point the docker daemon running inside Minikube 
@@ -46,33 +58,13 @@ minikube docker-env | Invoke-Expression
 docker build . demo-service:latest
 ```
 
-
-#### 5) Start minikube
-Ideally minikube should be already setup. Follow the guides linked in the **Requirements** section
-##### Mac-OSX
-Choose one of the available hypervisors
-```shell
-minikube start --driver=hyperkit
-```
-This only needs to be ran the first time. 
-only needs to be ran the first time
-```shell
-minikube start
-```
-Above command can be ran after you've set the driver the first time running
-##### On Windows
-```
-minikube start --vm-driver hyperv
-```
-
-
-#### 6) Apply the configmap (application configurations discovered from environment variables)
+#### 5) Apply the configmap (application configurations discovered from environment variables)
 ```shell
 kubectl apply -f demo-service-configmap.yaml
 ```
 This file probably shouldn't be checked into your git repo but it's shown here how you'd set up your application configuration
 
-#### 7) run the helm install
+#### 6) run the helm install
 
 Run helm install with `--debug --dry-run` to check to make sure the deployment looks good 
 
@@ -86,7 +78,7 @@ Or skip straight to installing
 helm upgrade --install demo-service demo-service
 ```
 
-#### 8) Check that the service is running
+#### 7) Check that the service is running
 ```shell
 kubectl get pods
 ```
@@ -120,10 +112,9 @@ minkube stop
 ### TODO 
 1) Set up secrets example
 2) Set up a integration tests using Test Containers
-3) Add prometheus tags to deployment yaml
-4) Check template files for naming convention on 'demo-service' can it be injected in?
-5) Add embedded kafka tests
-6) Add some fun Emojis to this README :) 
-7) Figure out running the docker/zookeepr and how we can connect them to this deployment?
-8) Update the dev-tools kafka/zookeeper to latest version
-9) Add circleci build process   
+3) Check template files for naming convention on 'demo-service' can it be injected in?
+4) Add embedded kafka tests
+5) Add some fun Emojis to this README :) 
+6) Figure out running the docker/zookeepr and how we can connect them to this deployment?
+7) Update the dev-tools kafka/zookeeper to latest version
+8) Add circleci build process   
