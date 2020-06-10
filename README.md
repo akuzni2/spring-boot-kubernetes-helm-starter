@@ -12,7 +12,13 @@ The project configuration is setup to deploy this service to a Kubernetes enviro
 
 #### 1) Build the jar file (Either locally or from CICD pipeline)
 
-#### 2) Point the docker daemon running inside Minikube 
+#### 2) Start minikube
+
+```$xslt
+minikube start
+```
+
+#### 3) Point the docker daemon running inside Minikube 
 This command will show the environment variables that minikube uses for it's docker daemon. In the next steps I show
 how to pipe those variables into the local shell environment variables. This will mean that when you run docker commands
 it will use the docker daemon that minikube started up.
@@ -35,13 +41,13 @@ minikube docker-env | Invoke-Expression
 ```
 
 
-#### 3) Build the docker container
+#### 4) Build the docker container
 ```shell
 docker build . demo-service:latest
 ```
 
 
-#### 4) Start minikube
+#### 5) Start minikube
 Ideally minikube should be already setup. Follow the guides linked in the **Requirements** section
 ##### Mac-OSX
 Choose one of the available hypervisors
@@ -60,19 +66,27 @@ minikube start --vm-driver hyperv
 ```
 
 
-#### 5) Apply the configmap (application configurations discovered from environment variables)
+#### 6) Apply the configmap (application configurations discovered from environment variables)
 ```shell
 kubectl apply -f demo-service-configmap.yaml
 ```
 This file probably shouldn't be checked into your git repo but it's shown here how you'd set up your application configuration
 
-#### 6) run the helm install
+#### 7) run the helm install
+
+Run helm install with `--debug --dry-run` to check to make sure the deployment looks good 
+
+```shell
+helm upgrade --install --debug --dry-run demo-service demo-service
+```
+
+Or skip straight to installing
 
 ```shell
 helm upgrade --install demo-service demo-service
 ```
 
-#### 5) Check that the service is running
+#### 8) Check that the service is running
 ```shell
 kubectl get pods
 ```

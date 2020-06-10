@@ -27,12 +27,18 @@ spec:
       serviceAccountName: {{ include "demo-service.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+        - name: heap-dumps
+          emptyDir: {}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+            - name: heap-dumps
+              mountPath: /dumps
           env:
             - name: BOOTSTAP_SERVERS
               valueFrom:
