@@ -1,6 +1,8 @@
 # Spring Boot Kafka Starter With Kubernetes and Helm
 ## Demo-Service
 
+[![akuzni2](https://circleci.com/gh/akuzni2/spring-boot-kubernetes-helm-starter.svg?style=svg)](https://app.circleci.com/pipelines/github/akuzni2/spring-boot-kubernetes-helm-starter)
+
 This is starter project for an application `demo-service` - a Java application using Spring Boot Kafka.
 The project configuration is setup to deploy this service to a Kubernetes environment using Helm.
 
